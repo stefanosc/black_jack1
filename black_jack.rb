@@ -11,30 +11,35 @@ cards = [ '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A' ]
 
 deck = suits.product(cards)
 
-used_cards = []
-
-
-
-def generate_card suits, cards
-
-  card = [ suits[rand(suits.length)], cards[rand(cards.length)] ]
-    
-end
-
-card = generate_card(suits, cards)
-
-while used_cards.include?(card.join())
-  generate_card suits, cards 
-end
-
-used_cards << card.join()
-
-if player_cards.length < 2
-    
-end
-
 player_cards = []
 dealer_cards = []
+
+def pick_card deck
+
+  card = deck[rand(deck.length)]
+  
+    
+end
+
+
+
+# def generate_card suits, cards
+
+#   card = [ suits[rand(suits.length)], cards[rand(cards.length)] ]
+    
+# end
+
+# card = generate_card(suits, cards)
+
+# while used_cards.include?(card.join())
+#   generate_card suits, cards 
+# end
+
+# used_cards << card.join()
+
+
+
+
 
 # if player_cards = []
 #     player_cards << 
