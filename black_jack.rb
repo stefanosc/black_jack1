@@ -13,13 +13,39 @@ deck = suits.product(cards)
 
 player_cards = []
 dealer_cards = []
+player_score = 0
+dealer_score = 0
 
-def pick_card deck
+def serve_card deck
 
-  card = deck[rand(deck.length)]
+  deck = deck.shuffle!
+  deck.pop
   
-    
 end
+
+def count_score cards
+  cards.each { |v|
+    if v[1].to_i > 0
+      total += v[1].to_i
+    elsif v[1] == 'J' || v[1] == 'Q' || v[1] == 'K'
+      total += 10
+    elsif v[1] == 'A'
+      aces += 1
+      total += 11
+    end
+  }
+  while total > 21
+    if aces > 0
+      aces -= 1
+      total -= 10
+    end 
+  end 
+end
+
+
+
+c = serve_card(deck)
+
 
 
 
