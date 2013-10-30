@@ -16,24 +16,26 @@ used_cards = []
 def generate_card suits, cards
 
   card = [ suits[rand(suits.length)], cards[rand(cards.length)] ]
-  
-  if used_cards.include?(card.join())
-    generate_card suits, cards 
-  end
-
-  used_cards << card.join()
-
-  
+    
 end
-  
+
+card = generate_card(suits, cards)
+
+while used_cards.include?(card.join())
+  generate_card suits, cards 
+end
+
+used_cards << card.join()
+
+print used_cards
 
 player_cards = []
 dealer_cards = []
 
-if player_cards = []
-    player_cards << 
+# if player_cards = []
+#     player_cards << 
     
-  end
+#   end
 
 def count_score card
 
