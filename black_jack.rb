@@ -9,6 +9,8 @@ puts "welcome #{player} let's play!"
 suits = [ 'H', 'D', 'C', 'S' ]
 cards = [ '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A' ]
 
+deck = suits.product(cards)
+
 used_cards = []
 
 
@@ -27,7 +29,9 @@ end
 
 used_cards << card.join()
 
-print used_cards
+if player_cards.length < 2
+    
+end
 
 player_cards = []
 dealer_cards = []
