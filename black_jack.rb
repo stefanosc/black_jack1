@@ -16,7 +16,7 @@ card = [ suits[rand(suits.length)], cards[rand(cards.length)] ]
 while used_cards.include?(card.join())
 
   card = [ suits[rand(suits.length)], cards[rand(cards.length)] ]
-  used_cards << card.join()
+  used_cards << card.join() unless used_cards.include?(card.join())
   return card
 
 end
