@@ -15,6 +15,8 @@ player_cards = []
 dealer_cards = []
 player_score = 0
 dealer_score = 0
+player_wins = 0
+dealer_wins = 0
 
 def serve_card deck
 
@@ -44,6 +46,14 @@ end
 
 
 
+while true
+  2.times do ||
+    player_cards << serve_card(deck)
+    dealer_cards << serve_card(deck)
+    
+  end
+end
+
 c = serve_card(deck)
 
 
@@ -72,8 +82,3 @@ c = serve_card(deck)
     
 #   end
 
-def count_score card
-
-
-  
-end
