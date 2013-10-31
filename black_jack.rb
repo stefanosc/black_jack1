@@ -1,5 +1,3 @@
-
-
 puts 'Welcome to BlackJack, an awesome card game'
 puts 'Please enter your name to begin'
 
@@ -13,11 +11,11 @@ cards = [ '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A' ]
 
 deck = suits.product(cards)
 
-player_cards = []
-dealer_cards = []
+# player_cards = []
+# dealer_cards = []
 player_score = 0
 dealer_score = 0
-
+blackjack = 0
 player_wins = 0
 dealer_wins = 0
 
@@ -43,11 +41,9 @@ def count_score cards
     end
   end
   
-  while total > 21
-    if aces > 0
+  while total > 21 and aces > 0
       aces -= 1
       total -= 10
-    end 
   end 
   total
 end
@@ -57,6 +53,9 @@ while true
     deck = suits.product(cards)
   end
 
+  player_cards = []
+  dealer_cards = []
+  
   2.times do
     player_cards << serve_card(deck)
     dealer_cards << serve_card(deck)
@@ -69,13 +68,20 @@ while true
   puts player_cards.join(' ')
   puts "your score is #{player_score}"
   puts ' '
+  # check if the player has blackJack
+  if player_score == 21 and player_cards.length == 2
+    puts "Cool that is an awesome BlackJack!"
+    blackjack = 1
+  end
   puts "would you like to stay or hit? type 'stay' or simply enter to hit again"
   hit_stay = gets.chomp
 
   while hit_stay != "stay"
     player_cards << serve_card(deck)
-    player_score = count_score(player_cards)
+    player_score = count_score(player_cards) 
+
     if player_score > 21
+      puts player_cards.join(' ')
       puts "Sorry you lose, your score is: #{player_score} !!"
       dealer_wins += 1
       break dealer_wins
@@ -88,7 +94,8 @@ while true
   end
 
   if player_score <= 21
-    
+
+    puts "-" * 50
     puts "the #{dealer} cards are"
     puts dealer_cards.join(' ')
     puts "the dealer score is #{dealer_score}"
@@ -105,23 +112,21 @@ while true
       puts "the #{dealer} just hit and her new cards are"
       puts dealer_cards.join(' ')
       puts "the dealer score is #{dealer_score}"
-        if dealer_score >= player_score
-          puts "the #{dealer} wins"
-          dealer_wins += 1
-          break dealer_wins
-        end
-        dealer_score
       end
+      dealer_score
+    end
 
-      if dealer_score < player_score 
+    if dealer_score >= player_score and dealer_score < 22 and blackjack == 0
+      puts "the #{dealer} wins"
+      dealer_wins += 1
+    else # elsif dealer_score < player_score 
       player_wins += 1
-      end
-
+      puts "you win!"
     end
 
   end
 
-
+  puts "-" * 50
   puts "you have #{player_wins} wins"
   puts "the dealer has #{dealer_wins} wins"
   puts "would you like to play again?"
