@@ -1,3 +1,5 @@
+
+
 puts 'Welcome to BlackJack, an awesome card game'
 puts 'Please enter your name to begin'
 
@@ -15,6 +17,7 @@ player_cards = []
 dealer_cards = []
 player_score = 0
 dealer_score = 0
+
 player_wins = 0
 dealer_wins = 0
 
@@ -26,8 +29,10 @@ def serve_card deck
 end
 
 def count_score cards
-  cards.each { |v|
-    total = 0
+  total = 0
+  aces = 0
+  cards.each do |v|
+
     if v[1].to_i > 0
       total += v[1].to_i
     elsif v[1] == 'J' || v[1] == 'Q' || v[1] == 'K'
@@ -36,16 +41,22 @@ def count_score cards
       aces += 1
       total += 11
     end
-  }
+  end
+  
   while total > 21
     if aces > 0
       aces -= 1
       total -= 10
     end 
   end 
+  total
 end
 
 while true
+  if deck.length < 20
+    deck = suits.product(cards)
+  end
+
   2.times do
     player_cards << serve_card(deck)
     dealer_cards << serve_card(deck)
@@ -58,41 +69,145 @@ while true
   puts player_cards.join(' ')
   puts "your score is #{player_score}"
   puts ' '
-  puts "the #{dealer} cards are"
-  puts dealer_cards.join(' ')
-  puts "the dealer score is #{dealer_score}"
+  puts "would you like to stay or hit? type 'stay' or simply enter to hit again"
+  hit_stay = gets.chomp
 
-  input = gets.chomp
-  if input == ''
+  while hit_stay != "stay"
+    player_cards << serve_card(deck)
+    player_score = count_score(player_cards)
+    if player_score > 21
+      puts "Sorry you lose, your score is: #{player_score} !!"
+      dealer_wins += 1
+      break dealer_wins
+    end
+    puts "#{player} you have been served and your new cards are"
+    puts player_cards.join(' ')
+    puts "your score is #{player_score}"
+    puts "'stay' or 'hit'?"
+    hit_stay = gets.chomp
+  end
+
+  if player_score <= 21
+    
+    puts "the #{dealer} cards are"
+    puts dealer_cards.join(' ')
+    puts "the dealer score is #{dealer_score}"
+
+    while dealer_score < 17
+      dealer_cards << serve_card(deck)
+      dealer_score = count_score(dealer_cards)
+      
+      if dealer_score > 21
+        puts "the dealer busted! Her score is: #{dealer_score} !!"
+        player_wins += 1
+        break player_wins
+      else  
+      puts "the #{dealer} just hit and her new cards are"
+      puts dealer_cards.join(' ')
+      puts "the dealer score is #{dealer_score}"
+        if dealer_score >= player_score
+          puts "the #{dealer} wins"
+          dealer_wins += 1
+          break dealer_wins
+        end
+        dealer_score
+      end
+
+      if dealer_score < player_score 
+      player_wins += 1
+      end
+
+    end
+
+  end
+
+
+  puts "you have #{player_wins} wins"
+  puts "the dealer has #{dealer_wins} wins"
+  puts "would you like to play again?"
+
+  play_again = gets.chomp
+  if play_again == 'no'
     break
   end
 
 end
 
 
-# c = serve_card(deck)
-
-
-# def generate_card suits, cards
-
-#   card = [ suits[rand(suits.length)], cards[rand(cards.length)] ]
-    
-# end
-
-# card = generate_card(suits, cards)
-
-# while used_cards.include?(card.join())
-#   generate_card suits, cards 
-# end
-
-# used_cards << card.join()
-
-
-
-
-
-# if player_cards = []
-#     player_cards << 
-    
+# while true
+#   if deck.length < 20
+#     deck = suits.product(cards)
 #   end
 
+#   2.times do
+#     player_cards << serve_card(deck)
+#     dealer_cards << serve_card(deck)
+#   end
+
+#   player_score = count_score(player_cards)
+#   dealer_score = count_score(dealer_cards)
+
+#   puts "#{player} you have been served the following cards"
+#   puts player_cards.join(' ')
+#   puts "your score is #{player_score}"
+#   puts ' '
+#   puts "would you like to stay or hit? type 'stay' or 'hit' and enter"
+#   hit_stay = gets.chomp
+
+#   while hit_stay != 'stay'
+#     player_cards << serve_card(deck)
+#     player_score = count_score(player_cards)
+#     if player_score > 21
+#       puts "Sorry you lose, your score is: #{player_score} !!"
+#       dealer_wins += 1
+#       break
+#     end
+#     puts "#{player} you have been served and your new cards are"
+#     puts player_cards.join(' ')
+#     puts "your score is #{player_score}"
+#     puts "'stay' or 'hit'?"
+#     hit_stay = gets.chomp
+#   end
+
+#   if player_score <= 21
+    
+#     puts "the #{dealer} cards are"
+#     puts dealer_cards.join(' ')
+#     puts "the dealer score is #{dealer_score}"
+
+#     while dealer_score < 17
+#       dealer_cards << serve_card(deck)
+#       dealer_score = count_score(dealer_cards)
+      
+#       if dealer_score > 21
+#         puts "the dealer busted! Her score: #{dealer_score} !!"
+#         player_wins += 1
+#         break
+#       else
+#       puts "the #{dealer} just hit and her new cards are"
+#       puts dealer_cards.join(' ')
+#       puts "the dealer score is #{dealer_score}"
+#         if dealer_score >= player_score
+#           puts "the #{dealer} wins"
+#           dealer_wins += 1
+#           break
+#         end
+#       end
+
+#     end
+
+#   end
+#   if dealer_score < player_score
+#     player_wins += 1
+#   end
+
+#   puts "you have #{player_wins} wins"
+#   puts "the dealer has #{dealer_wins} wins"
+#   puts "would you like to play again?"
+
+#   play_again = gets.chomp
+#   if play_again == 'no'
+#     break
+#   end
+
+# end
