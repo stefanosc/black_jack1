@@ -8,8 +8,8 @@ puts "welcome #{player} let's play!"
 
 suits = [ 'H', 'D', 'C', 'S' ]
 cards = [ '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A' ]
+deck = []
 
-deck = suits.product(cards)
 
 # player_cards = []
 # dealer_cards = []
@@ -49,8 +49,8 @@ def count_score cards
 end
 
 while true
-  if deck.length < 20
-    deck = suits.product(cards)
+  if deck.length < 40
+    deck = ((suits.product(cards)) + (suits.product(cards))).shuffle!
   end
 
   player_cards = []
@@ -129,7 +129,7 @@ while true
   puts "-" * 50
   puts "you have #{player_wins} wins"
   puts "the dealer has #{dealer_wins} wins"
-  puts "would you like to play again?"
+  puts "would you like to play again? enter to play or type 'no' to exit"
 
   play_again = gets.chomp
   if play_again == 'no'
