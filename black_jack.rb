@@ -84,7 +84,7 @@ while true
       puts player_cards.join(' ')
       puts "Sorry you lose, your score is: #{player_score} !!"
       dealer_wins += 1
-      break dealer_wins
+      break 
     end
     puts "#{player} you have been served and your new cards are"
     puts player_cards.join(' ')
@@ -107,7 +107,7 @@ while true
       if dealer_score > 21
         puts "the dealer busted! Her score is: #{dealer_score} !!"
         player_wins += 1
-        break player_wins
+        break
       else  
       puts "the #{dealer} just hit and her new cards are"
       puts dealer_cards.join(' ')
@@ -119,7 +119,7 @@ while true
     if dealer_score >= player_score and dealer_score < 22 and blackjack == 0
       puts "the #{dealer} wins"
       dealer_wins += 1
-    else # elsif dealer_score < player_score 
+    elsif dealer_score < player_score 
       player_wins += 1
       puts "you win!"
     end
