@@ -17,10 +17,7 @@ player_wins = 0
 dealer_wins = 0
 
 def serve_card deck
-
-  deck = deck.shuffle!
   deck.pop
-  
 end
 
 def count_score cards
