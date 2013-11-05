@@ -79,7 +79,7 @@ class Dealer
 
   attr_accessor :name, :cards
 
-  def initialize (n)
+  def initialize (n="Dealer")
   @name = n
   @cards = []
   @@count += 1
