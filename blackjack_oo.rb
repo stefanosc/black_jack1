@@ -36,8 +36,8 @@ class Deck
     cards.shuffle!
   end
 
-  def deal
-    cards.pop
+  def deal player
+    player.cards << cards.pop
   end
 
 end
@@ -61,7 +61,7 @@ class Player
   attr_accessor :name, :cards
   @@count = 0
 
-  def initialize (n)
+  def initialize (n="Player#{@@count}")
     @name = n
     @cards = []
     @@count += 1
@@ -82,7 +82,6 @@ class Dealer
   def initialize (n="Dealer")
   @name = n
   @cards = []
-  @@count += 1
     
   end
 # plays
