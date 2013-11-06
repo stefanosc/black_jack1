@@ -23,7 +23,7 @@ class Deck
   def initialize (num_decks=1)
     @cards = []  
     ["Hearts", "Diamonds", "Clubs", "Spades"].each do |suit|
-      ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"].each do |face_value|
+      ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"].each do |face_value|
         @cards << Card.new(suit, face_value)
       end
     end
@@ -33,7 +33,7 @@ class Deck
   end
 
   def mix
-    cards.shuffle!
+    cards.shuffle!.shuffle!.shuffle!
   end
 
   def deal player
@@ -43,7 +43,7 @@ class Deck
 end
 
 
-module Playable
+module Hand
   def hit
     
   end
@@ -51,12 +51,48 @@ module Playable
   def stay
     
   end
+
+  def total 
+    total = 0
+    aces = 0
+    cards.each do |card|
+      if card.face_value.to_i > 0
+        total += card.face_value.to_i
+        puts card.face_value + "to i > 0"
+        puts total
+      elsif card.face_value == "Ace"
+        puts card.face_value + "ace"
+        total += 11
+        aces +=1
+        puts total
+      else
+        total += 10
+        puts card.face_value
+        puts total
+      end
+    end
+    while total > 21 and aces > 0
+      aces.times do
+        total -= 10
+        aces -= 1
+      end
+    end
+    total
+  end
+
+  def has_blackjack?
+    if @cards.length == 2 and self.total == 21
+      true
+    else
+      false
+    end
+  end
   
 end
   
 
 class Player
-  include Playable
+  include Hand
 
   attr_accessor :name, :cards
   @@count = 0
@@ -75,7 +111,7 @@ class Player
 end
 
 class Dealer
-  include Playable
+  include Hand
 
   attr_accessor :name, :cards
 
@@ -90,41 +126,12 @@ class Dealer
 
 end
 
-class Hand
+class Game
 
-
+  def initialize
+    @player_count = 1
+    
+  end
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
-# c1 = Card.new('H','3')
-# c2 = Card.new('D', '4')
-
-# c1.pretty_output
-# c2.pretty_output
-
-# puts c1.suit
-# puts c2.suit
-
-# c1.suit = "New Suit for C1"
-# c2.suit = "New Suit for c2"
-
-# puts c1.suit
-# puts c2.suit
-
-
-
-
-
-
 
