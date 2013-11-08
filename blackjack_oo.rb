@@ -12,7 +12,7 @@ class Card
   end
 
   def to_s
-    "The #{@face_value} of #{@suit}"
+    "#{@face_value} of #{@suit}"
   end
 end
 
@@ -53,17 +53,11 @@ module Hand
     cards.each do |card|
       if card.face_value.to_i > 0
         total += card.face_value.to_i
-        puts card.face_value + "to i > 0"
-        puts total
       elsif card.face_value == "Ace"
-        puts card.face_value + "ace"
         total += 11
         aces +=1
-        puts total
       else
         total += 10
-        puts card.face_value
-        puts total
       end
     end
     while total > 21 and aces > 0
@@ -87,12 +81,12 @@ module Hand
 
   def show_cards
 
-    address_player = "#{@name}, you have" if self.is_a?(Player)
-    address_player = "The #{@name}, has" if self.is_a?(Dealer)
-    puts address_player + " the following cards:" 
-    puts "-" * 50
-    @cards.each {|card| puts card.to_s}
-    puts "-" * 50
+    puts "#{@name} cards:" if self.is_a?(Player)
+    puts "The #{@name} cards:" if self.is_a?(Dealer)
+    puts "-" * 30
+    cards.each {|card| puts card.to_s}
+    puts "-" * 30
+    puts "Total: #{self.total}"
     puts
     
   end
@@ -135,11 +129,12 @@ class Dealer
 
   def dealer_show_cards
 
-    puts "The #{@name}, has the following cards:"
-    puts "-" * 50
+    puts "The #{@name}, cards:"
+    puts "-" * 30
     puts "First card hidden, until dealer turn"
     puts @cards[1].to_s
-    puts "-" * 50
+    puts "-" * 30
+    puts 
   
   end
 end
@@ -147,59 +142,77 @@ end
 
 class Blackjack
 
-attr_accessor :player, :deck, :dealer
+attr_accessor :player, :deck, :dealer, :player_count
 
   def initialize 
-    @player = Player.new
+    @player = []
     @deck = nil
     @dealer = Dealer.new
+    @player_count = 0
     
   end
 
-  def start
-
+  def first_launch
     puts "Welcome to Blackjack"
     sleep(0.5)
-    # puts "Lets't start, please tell me how many players would like to play"
-    puts "Please type your name to begin"
-    self.player.name = gets.chomp
-    sleep(0.5)
-    puts "Thank you #{player.name}, I am the #{dealer.name} and I will serve you in this game"
-    sleep(0.5)
-
-    # mix cards
-    # handle initial dealing for each player and the Dealer
+    puts "Let's create a new game, how many players would like to play?"
+    self.player_count = gets.chomp.to_i
     
   end
 
-  def new_game
-    
-    puts "Let's Start a new game! I will now prepare and shuffle a new deck the cards"
-    self.deck = Deck.new(2)
-    deck.mix
-    20.times do
-      print "*"
-      sleep(0.2)
-    end
-    puts
-    puts "Done, I will deal the cards now"
-    2.times {player.add_card(deck.deal)}
-    2.times {dealer.add_card(deck.deal)}
+  def create_players
 
+    # create player object(s)
+    player_count.times do
+      self.player << Player.new
+    end
+    
+    # set names
+    player_count == 1 ? (puts "Please type your name to begin") : (puts "Please type the name for each player")
+    i = 0
+    player.each do |player|
+      puts "Name for player#{i+=1}"
+      player.name = gets.chomp
+    end
+    
+  end
+
+  def prepare_deck # and clear the cards array for dealer and player(s)
+    
+    puts "The Dealer is now preparing a new deck of cards!"
+    self.deck = Deck.new(player_count / 2) # always make sure there are enough cards based on player_count
+    player.each {|player| player.cards = [] }
+    dealer.cards = []
+
+    deck.mix
+    15.times do
+      print "*"
+      sleep(0.1)
+    end
+    print " OK"
+    puts
+
+  end
+
+  def initial_deal
+
+    2.times do
+      player.each {|player| player.add_card(deck.deal) }
+      dealer.add_card(deck.deal)
+    end
+    
   end
 
   def blackjack_or_busts? dealer_or_player
     if dealer_or_player.has_blackjack?
-      puts "Congratulations #{player.name}, you win this game!" if dealer_or_player.is_a?(Player)
+      puts "Congratulations #{dealer_or_player.name}, you win this game!" if dealer_or_player.is_a?(Player)
       puts "Sorry, you loose this game #{player.name}! The dealer just hit Blackjack" if dealer_or_player.is_a?(Dealer)
-      dealer_or_player.show_cards
       play_again?
     end
 
-    if dealer_or_player.busted?
-      puts "The Dealer busted. Congratulations #{player.name}, you win this game!" if dealer_or_player.is_a?(Dealer)
-      puts "Sorry, you loose this game #{player.name}! You busted" if dealer_or_player.is_a?(Player)
-      dealer_or_player.show_cards
+    if dealer_or_player.busted? #TODO insert all players names when dealer busts
+      puts "The Dealer busted. Congratulations, you win this game!" if dealer_or_player.is_a?(Dealer)
+      puts "Sorry, you loose this game #{dealer_or_player.name}! You busted" if dealer_or_player.is_a?(Player)
       play_again?
     end
 
@@ -207,30 +220,31 @@ attr_accessor :player, :deck, :dealer
   end
 
   def deal_player
-
-    hit_or_stay = "1"
-      puts "Your score is #{self.total}"
   
-    while !player.busted?
-      puts "#{player.name}, would you like to hit or stay? type: 1 to hit or, type: 2 to stay"
-      hit_or_stay = gets.chomp
-      
-      if hit_or_stay !['1', '2']
-        puts "please only type numbers: 1 or 2"
-        next
-      end
-      
-      if hit_or_stay == "2"
-        puts "You decided to stay with:"
-        player.show_cards
-        puts "your total is #{player.total}"
-      else
-        player.add_card(deck.deal)
-        puts "Your cards are"
-        player.show_cards
-        blackjack_or_busts?(player)
-      end
+    player.each do |player|
 
+      while !player.busted?
+        puts "#{player.name}, would you like to hit or stay? type: 1 to hit or, type: 2 to stay"
+        hit_or_stay = gets.chomp
+        
+        if !['1', '2'].include?(hit_or_stay)
+          puts "Error: you must enter 1 or 2"
+          next
+        end
+        
+        if hit_or_stay == "2"
+          puts "You decided to stay with #{player.total}"
+          puts
+          break
+        else
+          player.add_card(deck.deal)
+          last = player.cards.last
+          puts "You are have been dealt #{last}"
+          puts "Your new total is #{player.total}"
+          blackjack_or_busts?(player)
+        end
+
+      end
     end
   end
 
@@ -238,22 +252,26 @@ attr_accessor :player, :deck, :dealer
 
     dealer.show_cards
     blackjack_or_busts?(dealer)
-    puts "The dealer total is #{dealer.total}"
+
     while dealer.total < 17
+       
        dealer.add_card(deck.deal)
+       puts "dealing the dealer #{dealer.cards.last}"
        sleep (0.5)
-       dealer.show_cards
-       sleep (0.5)
+       puts "The dealer total is #{dealer.total}"       
        blackjack_or_busts?(dealer)
-       puts "The dealer total is #{dealer.total}"
     end 
   end
   
 
   def who_wins
 
-    puts "Congratulations #{player.name}, you win" if player.total > dealer.total
-    puts "I am sorry #{player.name}, you lost" if dealer.total >= player.total
+    player.each do |player|
+      puts "Congratulations #{player.name}, you win" if player.total > dealer.total
+      puts "I am sorry #{player.name}, you lost" if dealer.total >= player.total
+    end
+
+    
     play_again?
     # check each player score against the Dealer    
   end
@@ -273,14 +291,25 @@ attr_accessor :player, :deck, :dealer
   end
 
   def play
-    new_game
-    player.show_cards
-    blackjack_or_busts?(player)
+    first_launch
+    create_players
+    prepare_deck
+    initial_deal
+    # player.show_cards
+    player.each {|player| blackjack_or_busts?(player) }
     dealer.dealer_show_cards
     deal_player
     deal_dealer
     who_wins
     play_again?
+
+    first_launch
+    create_players
+    prepare_deck
+    initial_deal
+    deal_player
+    deal_dealer
+    who_wins
 
     
   end
@@ -289,5 +318,5 @@ attr_accessor :player, :deck, :dealer
 end
 
 blackjack = Blackjack.new
-blackjack.start
+# blackjack.start
 blackjack.play
